@@ -1,0 +1,59 @@
+;function to find the greatest of three numbers
+(define (max3 x y z) (
+    if (and (>= x y) (>= x z))
+        x
+    ;else
+        (if (>= y z)
+                y
+            ;else
+                z
+        )
+))
+
+;creating a list
+(define list1 '(1 2 3 4))
+
+;list operations
+(length list1)
+(null? '())
+(append list1 '(5))
+(cons 'a list1)
+
+;length of a list
+(define (len L) (
+    if (null? L)
+        0
+    ;else
+        (+ 1 (len (cdr L)))
+))
+
+;append two lists
+(define (app L1 L2) (
+    if (null? L1)
+        L2
+    ;else
+        (cons (car L1) (app (cdr L1) L2))
+))
+
+;append a value to a list
+(append list1 (cons 'a '()))
+
+;reverse a list
+(define (rev L) (
+    if (null? L)
+        L
+    ;else
+        (append (rev (cdr L)) (cons (car L) '()))
+))
+
+;count the ocurrence of an element in a list
+(define (count x L) (
+    if (null? L)
+        0
+    ;else
+        (if (= (car L) x)
+            (+ 1 (count x (cdr L)))
+        ;else
+            (count x (cdr L))
+        )
+))
