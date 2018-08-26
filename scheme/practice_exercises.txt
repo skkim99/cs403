@@ -44,6 +44,7 @@ Write a comb function such that (comb n k) returns the number of combinations n-
 
 n choose n is always 1
 n choose 0 is always 1
+0 choose n is always 1
 
 4,3
     3,2              3,3
@@ -54,7 +55,15 @@ n choose 0 is always 1
 
 Write an insertion_sort function such that (insertion_sort L) returns the elements of L rearranged into ascending order.
 
+#########################
+
 Write a selection_sort function.
+
+(define (selection_sort L) (
+
+))
+
+#######################
 
 Write a merge_sort function.
 
