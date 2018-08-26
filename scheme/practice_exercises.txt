@@ -1,16 +1,19 @@
 Write a power function such that (power m n) returns m raised to the power n, where n is non-negative integer.
 
 (define (pow m n) (
-	if (= n 0) 1
-	(* (pow m (- n 1)) m) ;else
+    if (= n 0)
+        1
+    ;else
+        (* (pow m (- n 1)) m)
 ))
 
 2^3
 (pow 2 3)
-	2 * (pow 2 2)
-		2 * pow(2 1)
-			2 * pow(2 0)
-				1
+    2 * (pow 2 2)
+        2 * pow(2 1)
+            2 * pow(2 0)
+                1
+
 ###########################
 
 Write a log function such that (log m q) returns n such that (power m n) returns q.
@@ -20,8 +23,10 @@ Write a log function such that (log m q) returns n such that (power m n) returns
 log base 2 of 8 is 3
 
 (define (log m q) (
-	if (= (/ q m) 1) 1
-	(+ 1 (log m (/ q m))) ;else
+    if (= (/ q m) 1)
+        1
+    ;else
+        (+ 1 (log m (/ q m)))
 ))
 
 divide by 2 until you get 1
@@ -29,6 +34,23 @@ divide by 2 until you get 1
 #############################
 
 Write a comb function such that (comb n k) returns the number of combinations n-choose-k.
+
+(define (comb n k) (
+    if (or (or (= k 0) (= k n)) (= n 0))
+        1
+    ;else
+        (+ (comb (- n 1) (- k 1)) (comb (- n 1) k))
+))
+
+n choose n is always 1
+n choose 0 is always 1
+
+4,3
+    3,2              3,3
+        2,1     2,2   1
+      1,0 1,1    1
+       1   1
+#######################
 
 Write an insertion_sort function such that (insertion_sort L) returns the elements of L rearranged into ascending order.
 
