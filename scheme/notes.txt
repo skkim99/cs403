@@ -37,6 +37,7 @@
 
 ;append a value to a list
 (append list1 (cons 'a '()))
+(append list1 '(a . ()))
 
 ;reverse a list
 (define (rev L) (
@@ -56,4 +57,46 @@
         ;else
             (count x (cdr L))
         )
+))
+
+;cond expression as opposed to if
+(define (is_neg x) (
+    cond((< x 0) 'yes)
+        ((> x 0) 'no)
+        (else 'neither)
+))
+
+;pairs
+(cons 'a 'b)
+'(a . (b . (c . ())))
+'(((() . c) . b) . a)
+
+;count function using cond and symbolic equality
+(define (count x L) (
+    cond((null? L) 0)
+        ((eq? (car L) x) (+ 1 (count x (cdr L))))
+        (else (count x (cdr L)))
+))
+
+;recursive count function
+(define (countall x L) (
+    if (null? L) 0
+        (if (pair? L) (+ (countall x (car L)) (countall x (cdr L)))
+            (if (eq? x L) 1 0))
+))
+
+;equal?
+(define (equ? L1 L2) (
+    if (and (pair? L1) (pair? L2))
+        (and (equ? (car L1) (car L2)) (equ? (cdr L1) (cdr L2)))
+    ;else
+        (eq? L1 L2)
+))
+
+;flatten
+(define (flatten L) (
+    if (pair? L)
+        (append (flatten (car L)) (flatten (cdr L)))
+    ;else
+        (if (null? L) L (cons L '()))
 ))
