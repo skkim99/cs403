@@ -85,7 +85,7 @@
             (if (eq? x L) 1 0))
 ))
 
-;equal?
+;equal? recursive
 (define (equ? L1 L2) (
     if (and (pair? L1) (pair? L2))
         (and (equ? (car L1) (car L2)) (equ? (cdr L1) (cdr L2)))
@@ -100,3 +100,91 @@
     ;else
         (if (null? L) L (cons L '()))
 ))
+
+;map
+(map square '(1 2 3 4))
+
+;map implementation
+(define (m f L) (
+  cond ((null? L) '())
+  (else (cons (f (car L)) (m f (cdr L))))  
+))
+
+;first element of each sub list
+(map car '((a b c) (1 2 3) (z x c)))
+
+;filter
+(filter positive? '(1 -1 2 -2 3))
+
+;filter implementation
+(define (filt x L) (
+    cond ((null? L) '())
+    ((f (car L)) (cons (car L) (filt x (cdr L))))
+    (else (filt x (cdr L)))
+))
+
+(define (filt f L) (
+    if (null? L) L
+        (if (f (car L)) (cons (car L) (filt f (cdr L))))
+            (filt f (cdr L))
+))
+
+;reject implementation
+(define (reject f L) (if (null? L) L
+    (if (f (car L)) (reject f (cdr L))
+        (cons (car L) (reject f (cdr L)))
+        )
+    )
+)
+
+;fold
+(fold-left + 0 '(1 2 3 4))
+(fold-left * 1 '(1 2 3 4))
+(fold-left append '() '((10 20) (a b c) (4 5)))
+
+(define (foldl f id L) (
+    if (null? L) id
+        (foldl f (f id (car L)) (cdr L)) 
+))
+
+(define (foldr f id L) (
+    if (null? L) id
+        (f (car L) (foldr f id (cdr L)))
+))
+
+(fold-left cons '() '(1 2 3 4))
+(fold-right cons '() '(1 2 3 4))
+
+;zip
+(define (z L1 L2) (
+    if (or (null? L1) (null? L2)) '()
+        (cons (list (car L1) (car L2)) (z (cdr L1) (cdr L2)))
+))
+
+;zipwith
+(define (zipwith f L1 L2) (
+    if (or (null? L1) (null? L2)) '()
+        (cons (f (car L1) (car L2)) (zipwith f (cdr L1) (cdr L2)))
+))
+
+;anonymous function (lambda)
+(define g (lambda (x) (+ x 3)))
+(g 5)
+
+((lambda (x) (+ x 3)) 5)
+(map (lambda (x) (+ x 3)) '(1 2 3))
+
+(define mycons (lambda (x) (lambda (y) (cons x y))))
+(cons 1 2)
+((mycons 1) 2)
+
+(define ((mycons2 x) y) (cons x y))
+((mycons2 1) 2)
+
+(define (mycons3 x) (lambda (y) (cons x y)))
+((mycons3 1) 2)
+
+(map (mycons 5) '(1 2 3 4))
+
+(fold-left (lambda (x y) (cons y x)) '() '(1 2 3 4))
+(fold-right (lambda (x y) (cons y x)) '() '(1 2 3 4))

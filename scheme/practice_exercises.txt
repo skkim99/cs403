@@ -60,7 +60,20 @@ Write an insertion_sort function such that (insertion_sort L) returns the elemen
 Write a selection_sort function.
 
 (define (selection_sort L) (
+    cond ((null? L) '())
+    (else (cons (min (car L) L) (selection_sort (del (min (car L) L) L))))
+))
 
+(define (min x L) (
+    cond ((null? L) x)
+    ((< (car L) x) (min (car L) (cdr L)))
+    (else (min x (cdr L)))
+))
+
+(define (del x L) (
+    cond ((null? L) '())
+    ((= x (car L)) (cdr L))
+    (else (cons (car L) (del x (cdr L))))
 ))
 
 #######################
@@ -81,7 +94,17 @@ Write a filter function such that (filter P L) returns the elements in list L fo
 
 Write a reject function such that (reject P L) returns the elements in list L for which predicate P yields #f.  Example: (reject (lambda (x) (> x 0)) '(1 -2 3 -4 5 0 8 9)) returns (-2 -4 0).
 
+#########################
+
 Write an applyeach function such that (applyeach L1 L2) applies each function in list L1 to the corresponding value in list L2.  Example: (applyeach (list car cdr length null? last) '((1 2) (4 5 6 7) (8 9 10) (11 12) (13 14))) returns (1 (5 6 7) 3 #f 14).
+
+(define (applyeach L1 L2) (
+    cond ((null? L1) L2)
+        ((null? L2) '())
+        (else cons ((car L1) (car L2)) (applyeach (cdr L1) (cdr L2)))
+))
+
+############################
 
 Write function (forall P L) which returns #t iff all values in L satisfy predicate P.  Also write function (exists P L) which returns #t iff some value in L satisfies predicate P.
 
