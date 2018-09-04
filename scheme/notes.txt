@@ -1,4 +1,7 @@
+;;;;;;;;;;;;;;;;;
+
 ;function to find the greatest of three numbers
+
 (define (max3 x y z) (
     if (and (>= x y) (>= x z))
         x
@@ -10,16 +13,23 @@
         )
 ))
 
-;creating a list
+;;;;;;;;;;;;;;;;;;;
+
+;lists
+
 (define list1 '(1 2 3 4))
 
 ;list operations
+
 (length list1)
 (null? '())
 (append list1 '(5))
 (cons 'a list1)
 
-;length of a list
+;;;;;;;;;;;;;;;;;;;
+
+;length implementation
+
 (define (len L) (
     if (null? L)
         0
@@ -27,7 +37,10 @@
         (+ 1 (len (cdr L)))
 ))
 
-;append two lists
+;;;;;;;;;;;;;;;
+
+;append implementation
+
 (define (app L1 L2) (
     if (null? L1)
         L2
@@ -36,10 +49,14 @@
 ))
 
 ;append a value to a list
+
 (append list1 (cons 'a '()))
 (append list1 '(a . ()))
 
-;reverse a list
+;;;;;;;;;;;;;;;;;;
+
+;reverse implementation
+
 (define (rev L) (
     if (null? L)
         L
@@ -47,7 +64,10 @@
         (append (rev (cdr L)) (cons (car L) '()))
 ))
 
+;;;;;;;;;;;;;;;
+
 ;count the ocurrence of an element in a list
+
 (define (count x L) (
     if (null? L)
         0
@@ -59,33 +79,48 @@
         )
 ))
 
+;;;;;;;;;;;;;;;;;;
+
 ;cond expression as opposed to if
+
 (define (is_neg x) (
     cond((< x 0) 'yes)
         ((> x 0) 'no)
         (else 'neither)
 ))
 
+;;;;;;;;;;;;;;;;;;;
+
 ;pairs
+
 (cons 'a 'b)
 '(a . (b . (c . ())))
 '(((() . c) . b) . a)
 
+;;;;;;;;;;;;;;;;;;;
+
 ;count function using cond and symbolic equality
+
 (define (count x L) (
     cond((null? L) 0)
         ((eq? (car L) x) (+ 1 (count x (cdr L))))
         (else (count x (cdr L)))
 ))
 
+;;;;;;;;;;;;;;;;;;;;
+
 ;recursive count function
+
 (define (countall x L) (
     if (null? L) 0
         (if (pair? L) (+ (countall x (car L)) (countall x (cdr L)))
             (if (eq? x L) 1 0))
 ))
 
+;;;;;;;;;;;;;;;;;;;;
+
 ;equal? recursive
+
 (define (equ? L1 L2) (
     if (and (pair? L1) (pair? L2))
         (and (equ? (car L1) (car L2)) (equ? (cdr L1) (cdr L2)))
@@ -93,7 +128,10 @@
         (eq? L1 L2)
 ))
 
+;;;;;;;;;;;;;;;;;;;;;;;
+
 ;flatten
+
 (define (flatten L) (
     if (pair? L)
         (append (flatten (car L)) (flatten (cdr L)))
@@ -101,43 +139,54 @@
         (if (null? L) L (cons L '()))
 ))
 
+;;;;;;;;;;;;;;;;;;;;
+
 ;map
+
 (map square '(1 2 3 4))
 
 ;map implementation
+
 (define (m f L) (
   cond ((null? L) '())
   (else (cons (f (car L)) (m f (cdr L))))  
 ))
 
 ;first element of each sub list
+
 (map car '((a b c) (1 2 3) (z x c)))
 
+;;;;;;;;;;;;;;;;;;;;
+
 ;filter
+
 (filter positive? '(1 -1 2 -2 3))
 
 ;filter implementation
-(define (filt x L) (
-    cond ((null? L) '())
-    ((f (car L)) (cons (car L) (filt x (cdr L))))
-    (else (filt x (cdr L)))
-))
 
 (define (filt f L) (
-    if (null? L) L
-        (if (f (car L)) (cons (car L) (filt f (cdr L))))
-            (filt f (cdr L))
+    cond ((null? L) '())
+    ((f (car L)) (cons (car L) (filt f (cdr L))))
+    (else (filt f (cdr L)))
 ))
+(filt positive? '(1 -1 2 -2 3))
+
+;;;;;;;;;;;;;;;;;
 
 ;reject implementation
+
 (define (reject f L) (if (null? L) L
     (if (f (car L)) (reject f (cdr L))
         (cons (car L) (reject f (cdr L)))
         )
     )
 )
+(reject positive? '(1 -1 2 -2 3))
+
+;;;;;;;;;;;;;;;;;
 
 ;fold
+
 (fold-left + 0 '(1 2 3 4))
 (fold-left * 1 '(1 2 3 4))
 (fold-left append '() '((10 20) (a b c) (4 5)))
@@ -146,33 +195,50 @@
     if (null? L) id
         (foldl f (f id (car L)) (cdr L)) 
 ))
+(foldl + 0 '(1 2 3 4))
 
 (define (foldr f id L) (
     if (null? L) id
         (f (car L) (foldr f id (cdr L)))
 ))
+(foldr - 0 '(1 2 3 4)) ;equals ((((4-0)-3)-2)-1)
 
 (fold-left cons '() '(1 2 3 4))
 (fold-right cons '() '(1 2 3 4))
 
+;;;;;;;;;;;;;;;;;;;;;;
+
 ;zip
+
+(zip '(1 2 3) '(1 2 3))
 (define (z L1 L2) (
     if (or (null? L1) (null? L2)) '()
         (cons (list (car L1) (car L2)) (z (cdr L1) (cdr L2)))
 ))
+(z '(1 2 3) '(1 2 3))
 
 ;zipwith
+
 (define (zipwith f L1 L2) (
     if (or (null? L1) (null? L2)) '()
         (cons (f (car L1) (car L2)) (zipwith f (cdr L1) (cdr L2)))
 ))
+(zipwith + '(1 2 3) '(1 2 3))
 
-;anonymous function (lambda)
+;;;;;;;;;;;;;;;;;;;;
+
+;anonymous functions (lambda)
+
 (define g (lambda (x) (+ x 3)))
 (g 5)
 
 ((lambda (x) (+ x 3)) 5)
+
 (map (lambda (x) (+ x 3)) '(1 2 3))
+
+;;;;;;;;;;;;;;;;;;
+
+;cons using lambda  (3 implementations)
 
 (define mycons (lambda (x) (lambda (y) (cons x y))))
 (cons 1 2)
@@ -186,5 +252,11 @@
 
 (map (mycons 5) '(1 2 3 4))
 
+;;;;;;;;;;;;;;;;;;;;;;;
+
+;fold using lambda
+
 (fold-left (lambda (x y) (cons y x)) '() '(1 2 3 4))
 (fold-right (lambda (x y) (cons y x)) '() '(1 2 3 4))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
