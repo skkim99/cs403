@@ -55,6 +55,22 @@ n choose 0 is always 1
 
 Write an insertion_sort function such that (insertion_sort L) returns the elements of L rearranged into ascending order.
 
+(define (insert x L) (
+    (if (null? L) (list x)) ;empty list
+        (if (< x (car L)) (cons x L)
+            (cons (car L) (insert x (cdr L)))
+        )
+))
+
+(define (insertion_sort1 L) (
+    if (null? L) '()
+        (insert (car L) (insertion_sort (cdr L)))
+))
+
+(define (insertion_sort2 L) (
+    (fold-right insert '() L)
+))
+
 #########################
 
 Write a selection_sort function.

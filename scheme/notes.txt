@@ -260,3 +260,56 @@
 (fold-right (lambda (x y) (cons y x)) '() '(1 2 3 4))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;trees
+
+; a
+; |       \       \
+; b       c        d
+; |\      |        |
+; e f     g      h j k
+;         |\       |
+;         m n      p
+
+;(root subtree1, subtree2, ...)
+
+(define tree1 '(a (b(e)(f)) (c (g(m)(n))) (d (h)(j(p))(k))))
+
+;post order
+
+;(efb) (mngc) (hpjkd) (a)
+
+(define (postorder T) (
+    if (null? T) '()
+        (fold-right append (list (car T)) (map postorder (cdr T)))
+))
+(postorder tree1)
+
+;;;;;;;;;;;;;;;;;;;;;
+
+;fibonacci
+
+(define (fib1 n) (
+    if (< n 2) n
+        (+ (fib1 (- n 1)) (fib1 (- n 2)))
+))
+
+(define (help n a b) (
+    if (= n 0) a
+        (help (- n 1) b (+ a b))
+))
+
+(define (fib2 n) (
+    (help n 0 1)
+))
+
+(define (help2 n) (
+    if (= n 0) '(0 . 1)
+        (let ((p (help2 (- n 1))))
+            (cons (cdr p) (+ (car p) (cdr p)))
+        )
+))
+
+(define (fib3 n) (
+    (car (help2 n))  
+))
