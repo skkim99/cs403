@@ -263,7 +263,7 @@
 
 ;trees
 
-; a
+;       a
 ; |       \       \
 ; b       c        d
 ; |\      |        |
@@ -311,5 +311,64 @@
 ))
 
 (define (fib3 n) (
-    (car (help2 n))  
+    (car (help2 n))
 ))
+
+;;;;;;;;;;;;;;;;;;;;;;;
+
+;using let
+
+(let ((a 2)(b 3)(c 4)) (+ (square a) (square b) (square c)))
+
+(define a 2)
+(define b 3)
+
+;let uses global scope
+
+(let ((c (+ a 5))(a (+ b 10))(b (* c a))) (list a b c))
+
+;let* uses local scope if overwritten
+
+(let* ((c (+ a 5))(a (+ b 10))(b (* c a))) (list a b c))
+
+(let ((a b)(b a)) (cons a b))
+(let* ((a b)(b a)) (cons a b))
+
+(define (f a) (+ a 1))
+
+(let ((f (lambda (a) (* 2 a)))
+        (g (lambda (a) (f (square a))))) 
+            (g 5)
+)
+
+;letrec
+
+(letrec ((f (lambda (n) (if (= n 0) 1 (* n (f (- n 1))))))) (f 5))
+(let ((f (lambda (n) (if (= n 0) 1 (* n (f (- n 1))))))) (f 5))
+
+;cond
+
+(define (f n)
+    (if (number? n) (square n)
+        (if (null? n) '()
+            (if (pair? n) (car n)
+                (if (procedure? n) (n 7)
+                    (if (boolean? n) (not n)
+                        n)
+                )
+            )
+        )
+    )
+)    
+
+(define (f n)
+    (cond ((number? n) (square n))
+        ((null? n) '())
+        ((pair? n) (car n))
+        (#t n)
+    )
+)
+
+
+
+
