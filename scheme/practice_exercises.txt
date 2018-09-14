@@ -98,30 +98,118 @@ Write a merge_sort function.
 
 Write a quick_sort function.
 
+##############################
+
 Write function (member? x T) that returns true (#t) if x is a key in binary search tree T, and otherwise returns false (#f).
+
+;   4
+; 2    6
+;1 3  5 7
+
+(define tree
+    '(4 (2 (1) (3)) (6 (5) (7)))
+)
+
+(define (member? x T)
+    (cond
+        ((null? T) #f)
+        ((integer? T) (= x T))
+        (else (or (member? x (car T)) (member? x (cdr T))))
+    )
+)
+
+(define tree2
+    '(2 (1) (3))
+)
+
+########################
 
 Write function (insert x T) that inserts key x into binary search tree T, and returns the resulting modified tree.
 
+########################
+
 Write function (remove x T) that removes key x from binary search tree T, and returns the resulting modified tree.
+
+###########################
 
 Write functions (inorder T) and (preorder T) and (postorder T) for binary search tree T.
 
+(define (postorder T) (
+    if (null? T) '()
+        (fold-right append (list (car T)) (map postorder (cdr T)))
+))
+
+(4 (3 (1) (2)) (6 (5) (7)))
+
+(3 (1) (2)) (6 (5) (7)) 4
+
+3
+
+#######################
+
 Write a filter function such that (filter P L) returns the elements in list L for which predicate P yields #t.  Example: (filter (lambda (x) (> x 0)) '(1 -2 3 -4 5 0 8 9)) returns (1 3 5 8 9).
 
+(define (_filter P L)
+    (cond
+        ((null? L) '())
+        ((P (car L)) (cons (car L) (_filter P (cdr L))))
+        (else (_filter P (cdr L)))
+    )
+)
+
+#########################
+
 Write a reject function such that (reject P L) returns the elements in list L for which predicate P yields #f.  Example: (reject (lambda (x) (> x 0)) '(1 -2 3 -4 5 0 8 9)) returns (-2 -4 0).
+
+(define (reject P L)
+    (cond
+        ((null? L) '())
+        ((f (car L)) (reject P (cdr L)))
+        (else (cons (car L) (reject P (cdr L))))
+    )
+)
 
 #########################
 
 Write an applyeach function such that (applyeach L1 L2) applies each function in list L1 to the corresponding value in list L2.  Example: (applyeach (list car cdr length null? last) '((1 2) (4 5 6 7) (8 9 10) (11 12) (13 14))) returns (1 (5 6 7) 3 #f 14).
 
-(define (applyeach L1 L2) (
-    cond ((null? L1) L2)
-        ((null? L2) '())
-        (else cons ((car L1) (car L2)) (applyeach (cdr L1) (cdr L2)))
-))
+(define (applyeach L1 L2)
+    (cond
+        ((null? L1) '())
+        (else (cons ((car L1) (car L2)) (applyeach (cdr L1) (cdr L2))))
+    )
+)
 
 ############################
 
 Write function (forall P L) which returns #t iff all values in L satisfy predicate P.  Also write function (exists P L) which returns #t iff some value in L satisfies predicate P.
 
 Which of the above functions can you implement using recursion?  Which functions can you implement without recursion by using map, foldl, and/or foldr?
+
+###########################
+
+(define (flatten L)
+    (cond
+        ((null? L) '())
+        ((pair? L) (append (flatten (car L)) (flatten (cdr L))) )
+        (else (list L))
+    )
+)
+
+(define Stack
+    (let ((L '()))
+        (lambda ( msg . a )
+            (cond
+                ((eq? msg 'push) (set! L (cons (car a) L)) L)
+                ((eq? msg 'pop) (set! L (cdr L)) L)
+                (else 'error )
+            )
+        )
+    )
+)
+
+(define counter
+    (let ((n 0))
+        (lambda () (set! n (+ 1 n)) n)
+    )
+)

@@ -2,16 +2,14 @@
 
 ;function to find the greatest of three numbers
 
-(define (max3 x y z) (
-    if (and (>= x y) (>= x z))
-        x
-    ;else
-        (if (>= y z)
-                y
-            ;else
-                z
-        )
-))
+(define (max3 x y z)
+    (cond
+        ((and (>= x y) (>= x z)) x)
+        ((and (>= y x) (>= y z)) y)
+        ((and (>= z x) (>= z y)) z)
+        (else 'error)
+    )
+)
 
 ;;;;;;;;;;;;;;;;;;;
 
@@ -25,69 +23,74 @@
 (null? '())
 (append list1 '(5))
 (cons 'a list1)
+(list-ref list1 2)
 
 ;;;;;;;;;;;;;;;;;;;
 
 ;length implementation
 
-(define (len L) (
-    if (null? L)
-        0
-    ;else
-        (+ 1 (len (cdr L)))
-))
+(define (_length L)
+    (cond
+        ((null? L) 0)
+        (else (+ 1 (_length (cdr L))))
+    )
+)
+(_length '(1 2 3 4))
 
 ;;;;;;;;;;;;;;;
 
 ;append implementation
 
-(define (app L1 L2) (
-    if (null? L1)
-        L2
-    ;else
-        (cons (car L1) (app (cdr L1) L2))
-))
+(define (_append L1 L2)
+    (cond
+        ((null? L1) L2)
+        (else (cons (car L1) (_append (cdr L1) L2)))
+    )
+)
+(_append '(a b c) '(d . ()))
 
-;append a value to a list
+;ways to append a value to a list
 
-(append list1 (cons 'a '()))
-(append list1 '(a . ()))
+(append '(a b c) (cons 'd '()))
+(append '(a b c) '(d . ()))
+(append '(a b c) (list 'd))
+(fold-right cons (list 'd) '(a b c))
 
 ;;;;;;;;;;;;;;;;;;
 
 ;reverse implementation
 
-(define (rev L) (
-    if (null? L)
-        L
-    ;else
-        (append (rev (cdr L)) (cons (car L) '()))
-))
+(define (_reverse L)
+    (cond
+        ((null? L) '())
+        (else (append (_reverse (cdr L)) (list (car L))))
+    )
+)
+(_reverse '(1 2 3 4))
 
 ;;;;;;;;;;;;;;;
 
 ;count the ocurrence of an element in a list
 
-(define (count x L) (
-    if (null? L)
-        0
-    ;else
-        (if (= (car L) x)
-            (+ 1 (count x (cdr L)))
-        ;else
-            (count x (cdr L))
-        )
-))
+(define (count x L)
+    (cond
+        ((null? L) 0)
+        (else (+ (if (= x (car L)) 1 0) (count x (cdr L))))
+    )
+)
+(count 1 '(1 2 3 1 2 1))
 
 ;;;;;;;;;;;;;;;;;;
 
 ;cond expression as opposed to if
 
-(define (is_neg x) (
-    cond((< x 0) 'yes)
+(define (_negative? x) (
+    cond(
+        (< x 0) 'yes)
         ((> x 0) 'no)
         (else 'neither)
-))
+    )
+)
 
 ;;;;;;;;;;;;;;;;;;;
 
@@ -102,42 +105,51 @@
 ;count function using cond and symbolic equality
 
 (define (count x L) (
-    cond((null? L) 0)
+    cond(
+        (null? L) 0)
         ((eq? (car L) x) (+ 1 (count x (cdr L))))
         (else (count x (cdr L)))
-))
+    )
+)
 
 ;;;;;;;;;;;;;;;;;;;;
 
-;recursive count function
+;recursively count
 
-(define (countall x L) (
-    if (null? L) 0
-        (if (pair? L) (+ (countall x (car L)) (countall x (cdr L)))
-            (if (eq? x L) 1 0))
-))
+(define (countall x L)
+    (cond
+        ((null? L) 0)
+        ((pair? L) (+ (countall x (car L)) (countall x (cdr L))))
+        ((eq? x L) 1)
+        (else 0)
+    )
+)
+(countall 'a '(a (a))) ;gives 0?
 
 ;;;;;;;;;;;;;;;;;;;;
 
 ;equal? recursive
 
-(define (equ? L1 L2) (
-    if (and (pair? L1) (pair? L2))
-        (and (equ? (car L1) (car L2)) (equ? (cdr L1) (cdr L2)))
-    ;else
-        (eq? L1 L2)
-))
+(define (_equal? L1 L2)
+    (cond
+        ((and (pair? L1) (pair? L2)) (and (_equal? (car L1) (car L2)) (_equal? (cdr L1) (cdr L2))))
+        (else (eq? L1 L2))
+    )
+)
+(_equal? '(1 2 3) '(1 2 3))
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
 ;flatten
 
-(define (flatten L) (
-    if (pair? L)
-        (append (flatten (car L)) (flatten (cdr L)))
-    ;else
-        (if (null? L) L (cons L '()))
-))
+(define (flatten L)
+    (cond
+        ((null? L) '())
+        ((pair? L) (append (flatten (car L)) (flatten (cdr L))))
+        (else (list L))
+    )
+)
+(flatten '(1 2 3 (4 5 6) (2) ()))
 
 ;;;;;;;;;;;;;;;;;;;;
 
@@ -147,10 +159,13 @@
 
 ;map implementation
 
-(define (m f L) (
-  cond ((null? L) '())
-  (else (cons (f (car L)) (m f (cdr L))))  
-))
+(define (mapp fn L)
+    (cond
+        ((null? L) '())
+        (else (cons (fn (car L)) (mapp fn (cdr L))))
+    )
+)
+(mapp square '(1 2 3 4)) ;(1 4 9 16)
 
 ;first element of each sub list
 
@@ -164,24 +179,27 @@
 
 ;filter implementation
 
-(define (filt f L) (
-    cond ((null? L) '())
-    ((f (car L)) (cons (car L) (filt f (cdr L))))
-    (else (filt f (cdr L)))
-))
-(filt positive? '(1 -1 2 -2 3))
+(define (_filter p L)
+    (cond
+        ((null? L) '())
+        ((not (p (car L))) (_filter p (cdr L)))
+        (else (cons (car L) (_filter p (cdr L))))
+    )
+)
+(_filter positive? '(1 -2 3 -4))
 
 ;;;;;;;;;;;;;;;;;
 
 ;reject implementation
 
-(define (reject f L) (if (null? L) L
-    (if (f (car L)) (reject f (cdr L))
-        (cons (car L) (reject f (cdr L)))
-        )
+(define (reject p L)
+    (cond
+        ((null? L) '())
+        ((p (car L)) (reject p (cdr L)))
+        (else (cons (car L) (reject p (cdr L))))
     )
 )
-(reject positive? '(1 -1 2 -2 3))
+(reject positive? '(1 -2 3 -4))
 
 ;;;;;;;;;;;;;;;;;
 
@@ -257,8 +275,15 @@
 ;fold using lambda
 
 (fold-left (lambda (x y) (cons y x)) '() '(1 2 3 4))
-(fold-right (lambda (x y) (cons y x)) '() '(1 2 3 4))
+(fold-left (lambda (x y) (append (list y) x)) '() '(1 2 3 4))
+(fold-right (lambda (x y) (append y (list x))) '() '(1 2 3 4))
 
+(fold-left (lambda (x y) (append x (list y))) '() '(1 2 3 4))
+(fold-right (lambda (x y) (cons x y)) '() '(1 2 3 4))
+(fold-right (lambda (x y) (append (list x) y)) '() '(1 2 3 4))
+
+(fold-right (lambda (x y) (append (list (square x)) y)) '() '(1 2 3 4))
+(fold-left (lambda (x y) (append x (list (square y)))) '() '(1 2 3 4))
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;trees
