@@ -1,0 +1,54 @@
+head [1,2,3,4,5]
+
+tail [1,2,3,4,5]
+
+fst (1,True)
+
+snd (1,True)
+
+reverse [1,2,3,4,5]
+
+length [1,2,3,4,5]
+
+True && False
+:type (&&)
+
+not True
+
+map not [True,False,True]
+
+map (\x -> x * x) [1,2,3,4]
+
+foldl (+) 0 [1,2,3,4]
+foldl (\x -> \y -> x + y * y) 0 [10,20,30]
+
+---------------------------
+
+fact n = if n <= 1 then 1 else n * fact(n-1)
+
+fib n = if n < 2 then n else fib(n-1) +fib(n-2)
+
+fact 0 = 1
+fact n = n * fact(n-1)
+
+fib 0 = 0
+fib 1 = 1
+fib n = fib(n-1) + fib(n-2)
+
+help 0 a b = a
+help n a b = help (n-1) b (a+b)
+fib n = help n 0 1
+
+fib n = help n 0 1 where
+	help 0 a b = a
+	help n a b = help (n-1) b (a+b)
+
+fib n = let
+	help 0 a b = a
+	help n a b = help (n-1) b (a+b)
+		in help n 0 1
+
+map' f list = if null list then [ ] else f (head list) : map' f (tail list)
+
+-------------------------
+
